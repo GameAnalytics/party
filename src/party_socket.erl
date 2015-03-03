@@ -1,4 +1,4 @@
--module(party_socket_carpool).
+-module(party_socket).
 -behaviour(gen_server).
 
 -ifdef(TEST).
@@ -192,7 +192,7 @@ handle_info({timeout, OtherTimer, timeout}, #state{timer = Timer} = State) ->
 
 
 terminate(Reason, State) ->
-    error_logger:info_msg("party_socket_carpool(~p) terminating:~n~p~n",
+    error_logger:info_msg("party_socket(~p) terminating:~n~p~n",
                           [self(), Reason]),
     Pool = party:pool_name(party:endpoint(State#state.endpoint)),
     ok = carpool:disconnect(Pool),
