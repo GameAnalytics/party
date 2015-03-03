@@ -10,7 +10,7 @@ start_link() ->
 
 
 init([]) ->
-    Child = {party_socket, {party_socket, start_link, []},
+    Child = {party_socket_carpool, {party_socket_carpool, start_link, []},
              temporary, brutal_kill, worker, []},
     {ok, {{simple_one_for_one, 0, 1}, [Child]}}.
 

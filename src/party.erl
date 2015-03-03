@@ -34,8 +34,16 @@ get(URL, Headers, Opts) ->
 post(URL, Headers, Body, Opts) ->
     do({post, URL, Headers, Body, Opts}, Opts).
 
-
 do(Request, Opts) ->
+    case party_socket(Opts) =:= undefined of
+        true  -> do_carpool(Request, Opts);
+        false -> do_raw(Request, Opts)
+    end.
+
+do_raw(Request, Opts) ->
+    party_socket_raw:do(party_socket(Opts), Request, call_timeout(Opts)).
+
+do_carpool(Request, Opts) ->
     Req = fun (Pid, Lock, _ElapsedUs, _Misses) ->
                   party_socket:do(Pid, Request, Lock, call_timeout(Opts))
           end,
@@ -81,3 +89,4 @@ pool_name({_Protocol, _Domain, _Port} = Endpoint) ->
 
 call_timeout(Opts) -> proplists:get_value(call_timeout, Opts, 5000).
 claim_timeout(Opts) -> proplists:get_value(claim_timeout, Opts, 1000).
+party_socket(Opts) -> proplists:get_value(party_socket, Opts).
